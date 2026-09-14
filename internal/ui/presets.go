@@ -4,7 +4,7 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/kaihen/iperf3-tui/internal/iperf"
+	"github.com/kaihen/kaiperf3-tui/internal/iperf"
 )
 
 type presetsModel struct {
@@ -77,7 +77,7 @@ func (m *Model) updatePresets(msg tea.Msg) tea.Cmd {
 func (m *Model) viewPresets() string {
 	p := &m.presets
 	var b strings.Builder
-	b.WriteString(titleStyle.Render("iperf3-tui · presets") + "\n")
+	b.WriteString(titleStyle.Render("KaiPerf3-tui · presets") + "\n")
 	b.WriteString(subtitleStyle.Render("saved client configurations") + "\n\n")
 
 	if len(p.items) == 0 {

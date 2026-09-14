@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/kaihen/iperf3-tui/internal/iperf"
+	"github.com/kaihen/kaiperf3-tui/internal/iperf"
 )
 
 type historyModel struct {
@@ -59,7 +59,7 @@ func (m *Model) updateHistory(msg tea.Msg) tea.Cmd {
 func (m *Model) viewHistory() string {
 	h := &m.history
 	var b strings.Builder
-	b.WriteString(titleStyle.Render("iperf3-tui · history") + "\n")
+	b.WriteString(titleStyle.Render("KaiPerf3-tui · history") + "\n")
 	b.WriteString(subtitleStyle.Render("past test results (newest first)") + "\n\n")
 
 	if len(h.items) == 0 {

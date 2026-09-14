@@ -1,4 +1,4 @@
-module github.com/kaihen/iperf3-tui
+module github.com/kaihen/kaiperf3-tui
 
 go 1.27.1
 

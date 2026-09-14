@@ -7,7 +7,7 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/guptarohit/asciigraph"
-	"github.com/kaihen/iperf3-tui/internal/iperf"
+	"github.com/kaihen/kaiperf3-tui/internal/iperf"
 )
 
 type runMode int
@@ -235,10 +235,10 @@ func (m *Model) viewRunning() string {
 	var b strings.Builder
 
 	if r.mode == runClient {
-		b.WriteString(titleStyle.Render("iperf3 · running client test") + "\n")
+		b.WriteString(titleStyle.Render("KaiPerf3-tui · running client test") + "\n")
 		b.WriteString(subtitleStyle.Render(r.clientCfg.Summary()) + "\n\n")
 	} else {
-		b.WriteString(titleStyle.Render(fmt.Sprintf("iperf3 · server listening on :%d", r.serverCfg.Port)) + "\n")
+		b.WriteString(titleStyle.Render(fmt.Sprintf("KaiPerf3-tui · server listening on :%d", r.serverCfg.Port)) + "\n")
 		b.WriteString(subtitleStyle.Render("reachable at: "+iperf.LocalIPsSummary()) + "\n\n")
 	}
 

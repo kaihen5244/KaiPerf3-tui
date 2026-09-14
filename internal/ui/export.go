@@ -3,7 +3,7 @@ package ui
 import (
 	"strings"
 
-	"github.com/kaihen/iperf3-tui/internal/iperf"
+	"github.com/kaihen/kaiperf3-tui/internal/iperf"
 )
 
 var exportFormats = []string{"Text report (.txt)", "CSV samples (.csv)", "PDF report (.pdf)"}

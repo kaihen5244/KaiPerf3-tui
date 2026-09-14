@@ -7,7 +7,7 @@ import (
 
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/kaihen/iperf3-tui/internal/iperf"
+	"github.com/kaihen/kaiperf3-tui/internal/iperf"
 )
 
 // formField indexes the focusable rows of the client config form.
@@ -259,7 +259,7 @@ func (m *Model) viewForm() string {
 	f := &m.form
 	var b strings.Builder
 
-	b.WriteString(titleStyle.Render("iperf3 · client test") + "\n")
+	b.WriteString(titleStyle.Render("KaiPerf3-tui · client test") + "\n")
 	b.WriteString(subtitleStyle.Render("Configure a test and run it against a remote iperf3 server") + "\n\n")
 
 	row := func(field formField, label, value string) {

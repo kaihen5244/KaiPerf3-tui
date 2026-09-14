@@ -1,4 +1,4 @@
-# iperf3-tui
+# KaiPerf3-tui
 
 A terminal UI frontend for [iperf3](https://iperf.fr/), the network throughput
 testing tool. It wraps the `iperf3` CLI so you don't have to remember flags:
@@ -49,15 +49,15 @@ produce them), make it executable, and run it:
 
 **macOS / Linux:**
 ```
-chmod +x iperf3-tui-<platform>
-./iperf3-tui-<platform>
+chmod +x KaiPerf3-tui-<platform>
+./KaiPerf3-tui-<platform>
 
-# optional: put it on PATH so you can just run `iperf3-tui`
-sudo mv iperf3-tui-<platform> /usr/local/bin/iperf3-tui
+# optional: put it on PATH so you can just run `KaiPerf3-tui`
+sudo mv KaiPerf3-tui-<platform> /usr/local/bin/KaiPerf3-tui
 ```
 
 **Windows:** no install step needed — double-click
-`iperf3-tui-windows-amd64.exe`, or run it from PowerShell/cmd. No admin
+`KaiPerf3-tui-windows-amd64.exe`, or run it from PowerShell/cmd. No admin
 rights required.
 
 No other runtime dependencies — it's a single static binary.
@@ -67,8 +67,8 @@ No other runtime dependencies — it's a single static binary.
 Requires Go 1.21+.
 
 ```
-go build -o iperf3-tui .
-./iperf3-tui
+go build -o KaiPerf3-tui .
+./KaiPerf3-tui
 ```
 
 ## Building binaries to share
@@ -83,7 +83,7 @@ and Windows (amd64) in `dist/`. Hand teammates the one matching their machine
 
 ## Usage
 
-Run `iperf3-tui` and use the arrow keys / `j`/`k` to navigate, `Enter` to
+Run `KaiPerf3-tui` and use the arrow keys / `j`/`k` to navigate, `Enter` to
 select, `Tab`/`Shift+Tab` to move between form fields, `←`/`→` or `Space` to
 toggle options, and `Esc` to go back.
 

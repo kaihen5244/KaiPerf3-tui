@@ -6,7 +6,7 @@ import (
 
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/kaihen/iperf3-tui/internal/iperf"
+	"github.com/kaihen/kaiperf3-tui/internal/iperf"
 )
 
 type serverFormModel struct {
@@ -48,7 +48,7 @@ func (m *Model) updateServerConfig(msg tea.Msg) tea.Cmd {
 
 func (m *Model) viewServerConfig() string {
 	var b strings.Builder
-	b.WriteString(titleStyle.Render("iperf3 · server") + "\n")
+	b.WriteString(titleStyle.Render("KaiPerf3-tui · server") + "\n")
 	b.WriteString(subtitleStyle.Render("start a local iperf3 server for others to test against") + "\n\n")
 	b.WriteString(labelStyle.Render("Port") + " " + focusedValueStyle.Render(m.serverForm.port.View()) + "\n\n")
 

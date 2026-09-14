@@ -15,7 +15,7 @@ const (
 	screenPresets
 )
 
-// Model is the root bubbletea model for iperf3-tui.
+// Model is the root bubbletea model for KaiPerf3-tui.
 type Model struct {
 	screen screen
 	width  int

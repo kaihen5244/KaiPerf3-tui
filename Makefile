@@ -1,4 +1,4 @@
-BINARY := iperf3-tui
+BINARY := KaiPerf3-tui
 DIST   := dist
 
 .PHONY: build test cross clean

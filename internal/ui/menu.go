@@ -4,7 +4,7 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/kaihen/iperf3-tui/internal/iperf"
+	"github.com/kaihen/kaiperf3-tui/internal/iperf"
 )
 
 type menuItem struct {
@@ -17,7 +17,7 @@ var menuItems = []menuItem{
 	{"Run server", "listen for incoming iperf3 client connections"},
 	{"History", "review past test results"},
 	{"Presets", "manage saved client configurations"},
-	{"Quit", "exit iperf3-tui"},
+	{"Quit", "exit KaiPerf3-tui"},
 }
 
 func (m *Model) updateMenu(msg tea.Msg) tea.Cmd {
@@ -56,7 +56,7 @@ func (m *Model) updateMenu(msg tea.Msg) tea.Cmd {
 
 func (m *Model) viewMenu() string {
 	var b strings.Builder
-	b.WriteString(titleStyle.Render("iperf3-tui") + "\n")
+	b.WriteString(titleStyle.Render("KaiPerf3-tui") + "\n")
 	b.WriteString(subtitleStyle.Render("a friendly terminal frontend for iperf3") + "\n")
 	b.WriteString(subtitleStyle.Render("this machine: "+iperf.LocalIPsSummary()) + "\n\n")
 
