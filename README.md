@@ -9,7 +9,7 @@ and export — so behavior is identical between the two.
 
 ![requires iperf3](https://img.shields.io/badge/requires-iperf3-blue)
 
-- **`KaiPerf3-tui`** — the terminal UI (`main.go`), keyboard-driven, tiny
+- **`KaiPerf3-tui`** — the terminal UI (`cmd/tui/main.go`), keyboard-driven, tiny
   single static binary, easy to cross-compile for any OS.
 - **`KaiPerf3-gui`** — a desktop GUI (`cmd/gui/main.go`) built with
   [Fyne](https://fyne.io/), for anyone who'd rather click than use a
@@ -76,7 +76,7 @@ No other runtime dependencies — it's a single static binary.
 Requires Go 1.21+.
 
 ```
-go build -o KaiPerf3-tui .
+go build -o KaiPerf3-tui ./cmd/tui
 ./KaiPerf3-tui
 ```
 

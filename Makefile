@@ -5,7 +5,7 @@ DIST       := dist
 .PHONY: build gui test cross clean
 
 build:
-	go build -o $(BINARY) .
+	go build -o $(BINARY) ./cmd/tui
 
 # Builds the GUI for the CURRENT platform only. Fyne uses cgo (OpenGL
 # bindings), so unlike the TUI this can't be cross-compiled with a plain
@@ -23,11 +23,11 @@ test:
 # to teammates. (The GUI is intentionally not included here — see `gui`.)
 cross: test
 	mkdir -p $(DIST)
-	GOOS=darwin  GOARCH=arm64 CGO_ENABLED=0 go build -o $(DIST)/$(BINARY)-darwin-arm64 .
-	GOOS=darwin  GOARCH=amd64 CGO_ENABLED=0 go build -o $(DIST)/$(BINARY)-darwin-amd64 .
-	GOOS=linux   GOARCH=amd64 CGO_ENABLED=0 go build -o $(DIST)/$(BINARY)-linux-amd64 .
-	GOOS=linux   GOARCH=arm64 CGO_ENABLED=0 go build -o $(DIST)/$(BINARY)-linux-arm64 .
-	GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -o $(DIST)/$(BINARY)-windows-amd64.exe .
+	GOOS=darwin  GOARCH=arm64 CGO_ENABLED=0 go build -o $(DIST)/$(BINARY)-darwin-arm64 ./cmd/tui
+	GOOS=darwin  GOARCH=amd64 CGO_ENABLED=0 go build -o $(DIST)/$(BINARY)-darwin-amd64 ./cmd/tui
+	GOOS=linux   GOARCH=amd64 CGO_ENABLED=0 go build -o $(DIST)/$(BINARY)-linux-amd64 ./cmd/tui
+	GOOS=linux   GOARCH=arm64 CGO_ENABLED=0 go build -o $(DIST)/$(BINARY)-linux-arm64 ./cmd/tui
+	GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -o $(DIST)/$(BINARY)-windows-amd64.exe ./cmd/tui
 	@echo "binaries written to $(DIST)/"
 
 clean:
