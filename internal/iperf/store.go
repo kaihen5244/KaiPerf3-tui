@@ -39,6 +39,45 @@ type HistoryEntry struct {
 	RawLog      []string      `json:"raw_log,omitempty"`
 }
 
+// ClientRunResult summarizes a finished (or aborted) client test, as
+// collected by whichever UI ran it. BuildHistoryEntry turns this into a
+// HistoryEntry, so every frontend records/exports results the same way.
+type ClientRunResult struct {
+	Config     ClientConfig
+	Sender     *Sample // nil if no sender summary line was seen
+	Receiver   *Sample // nil if no receiver summary line was seen
+	Points     []SamplePoint
+	RawLog     []string
+	Aborted    bool
+	FinishedAt time.Time
+}
+
+// BuildHistoryEntry converts a ClientRunResult into a HistoryEntry.
+func BuildHistoryEntry(r ClientRunResult) HistoryEntry {
+	t := r.FinishedAt
+	if t.IsZero() {
+		t = time.Now()
+	}
+	entry := HistoryEntry{
+		Time:    t,
+		Config:  r.Config.Summary(),
+		Aborted: r.Aborted,
+		Samples: r.Points,
+		RawLog:  r.RawLog,
+	}
+	if r.Sender != nil {
+		entry.AvgMbpsUp = r.Sender.Mbps
+		entry.Retransmits = r.Sender.Retransmits
+		if r.Sender.LossPct >= 0 {
+			entry.LossPct = r.Sender.LossPct
+		}
+	}
+	if r.Receiver != nil {
+		entry.AvgMbpsDown = r.Receiver.Mbps
+	}
+	return entry
+}
+
 func historyPath() (string, error) {
 	dir, err := configDir()
 	if err != nil {

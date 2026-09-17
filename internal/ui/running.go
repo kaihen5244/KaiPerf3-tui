@@ -18,17 +18,20 @@ const (
 )
 
 type runningModel struct {
-	mode     runMode
-	process  *iperf.Process
+	mode      runMode
+	process   *iperf.Process
 	clientCfg iperf.ClientConfig
 	serverCfg iperf.ServerConfig
 
-	lines   []string
-	samples []float64
-	points  []iperf.SamplePoint
-	sender  *iperf.Sample
+	lines    []string
+	samples  []float64
+	points   []iperf.SamplePoint
+	sender   *iperf.Sample
 	receiver *iperf.Sample
-	latest  *iperf.Sample
+	latest   *iperf.Sample
+
+	serverConnected bool   // server mode only: currently mid-transfer with a client
+	lastClientAddr  string // server mode only: address of the current/most recent client
 
 	startedAt  time.Time
 	finishedAt time.Time
@@ -138,6 +141,14 @@ func (m *Model) updateRunning(msg tea.Msg) tea.Cmd {
 			if len(r.lines) > maxLogLines {
 				r.lines = r.lines[len(r.lines)-maxLogLines:]
 			}
+			if r.mode == runServer {
+				if addr, ok := iperf.ParseAcceptedConnection(msg.Line); ok {
+					r.serverConnected = true
+					r.lastClientAddr = addr
+				} else if iperf.IsServerListeningLine(msg.Line) {
+					r.serverConnected = false
+				}
+			}
 			if sample, ok := iperf.ParseLine(msg.Line); ok {
 				r.latest = &sample
 				if sample.IsSummary {
@@ -194,28 +205,15 @@ func (m *Model) recordHistory() {
 // buildHistoryEntry snapshots a runningModel into a HistoryEntry, used both
 // to persist a completed client test and to export it on demand.
 func buildHistoryEntry(r *runningModel) iperf.HistoryEntry {
-	t := r.finishedAt
-	if t.IsZero() {
-		t = time.Now()
-	}
-	entry := iperf.HistoryEntry{
-		Time:    t,
-		Config:  r.clientCfg.Summary(),
-		Aborted: r.aborted,
-		Samples: r.points,
-		RawLog:  r.lines,
-	}
-	if r.sender != nil {
-		entry.AvgMbpsUp = r.sender.Mbps
-		entry.Retransmits = r.sender.Retransmits
-		if r.sender.LossPct >= 0 {
-			entry.LossPct = r.sender.LossPct
-		}
-	}
-	if r.receiver != nil {
-		entry.AvgMbpsDown = r.receiver.Mbps
-	}
-	return entry
+	return iperf.BuildHistoryEntry(iperf.ClientRunResult{
+		Config:     r.clientCfg,
+		Sender:     r.sender,
+		Receiver:   r.receiver,
+		Points:     r.points,
+		RawLog:     r.lines,
+		Aborted:    r.aborted,
+		FinishedAt: r.finishedAt,
+	})
 }
 
 func (m *Model) recordHistoryFromRun(r *runningModel) {
@@ -239,7 +237,20 @@ func (m *Model) viewRunning() string {
 		b.WriteString(subtitleStyle.Render(r.clientCfg.Summary()) + "\n\n")
 	} else {
 		b.WriteString(titleStyle.Render(fmt.Sprintf("KaiPerf3-tui · server listening on :%d", r.serverCfg.Port)) + "\n")
-		b.WriteString(subtitleStyle.Render("reachable at: "+iperf.LocalIPsSummary()) + "\n\n")
+		b.WriteString(subtitleStyle.Render("reachable at: "+iperf.LocalIPsSummary()) + "\n")
+		if !r.finished {
+			if r.serverConnected {
+				b.WriteString(goodStyle.Render(fmt.Sprintf("● CONNECTED — receiving from %s", r.lastClientAddr)) + "\n\n")
+			} else {
+				status := "● LISTENING — waiting for a connection..."
+				if r.lastClientAddr != "" {
+					status += fmt.Sprintf(" (last: %s)", r.lastClientAddr)
+				}
+				b.WriteString(warnStyle.Render(status) + "\n\n")
+			}
+		} else {
+			b.WriteString("\n")
+		}
 	}
 
 	if len(r.samples) >= 2 {

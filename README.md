@@ -1,11 +1,20 @@
 # KaiPerf3-tui
 
-A terminal UI frontend for [iperf3](https://iperf.fr/), the network throughput
-testing tool. It wraps the `iperf3` CLI so you don't have to remember flags:
-pick client or server mode, fill in a form, and watch a live throughput chart
-while the test runs.
+A terminal UI and desktop GUI frontend for [iperf3](https://iperf.fr/), the
+network throughput testing tool. Both wrap the `iperf3` CLI so you don't have
+to remember flags: pick client or server mode, fill in a form, and watch a
+live throughput chart while the test runs. They share all their underlying
+logic (`internal/iperf`) — test running, output parsing, history, presets,
+and export — so behavior is identical between the two.
 
 ![requires iperf3](https://img.shields.io/badge/requires-iperf3-blue)
+
+- **`KaiPerf3-tui`** — the terminal UI (`main.go`), keyboard-driven, tiny
+  single static binary, easy to cross-compile for any OS.
+- **`KaiPerf3-gui`** — a desktop GUI (`cmd/gui/main.go`) built with
+  [Fyne](https://fyne.io/), for anyone who'd rather click than use a
+  terminal. Same features, native window with tabs. See
+  [Building the GUI](#building-the-gui) for how it differs from the TUI build.
 
 ## Features
 
@@ -81,7 +90,24 @@ This produces static binaries for macOS (arm64/amd64), Linux (amd64/arm64),
 and Windows (amd64) in `dist/`. Hand teammates the one matching their machine
 — nothing else needs to be installed except `iperf3`.
 
-## Usage
+## Building the GUI
+
+```
+make gui
+./KaiPerf3-gui
+```
+
+Unlike the TUI, this **cannot** be cross-compiled with a single command from
+one machine: Fyne uses cgo (for OpenGL), so `make gui` only builds for
+whatever OS/arch you run it on. To hand out GUI builds for other platforms,
+either run `make gui` natively on each OS, or use
+[fyne-cross](https://github.com/fyne-io/fyne-cross) (Docker-based) to build
+all of them from one machine. This only affects *building* the GUI — the
+resulting binary itself still has no extra runtime dependencies beyond what
+every desktop OS ships with (OpenGL is part of the standard graphics stack
+on macOS, Windows, and any Linux desktop).
+
+## Usage — TUI
 
 Run `KaiPerf3-tui` and use the arrow keys / `j`/`k` to navigate, `Enter` to
 select, `Tab`/`Shift+Tab` to move between form fields, `←`/`→` or `Space` to
@@ -98,6 +124,22 @@ toggle options, and `Esc` to go back.
 - **Export** — once a client test finishes, press `e` to save it as a text
   report, CSV, or PDF. Files go to `~/iperf3-tui-exports/`, named
   `iperf3-report-<timestamp>.<ext>`; the exact path is shown after saving.
+
+## Usage — GUI
+
+Run `KaiPerf3-gui`. The window has four tabs:
+
+- **Client Test** — fill in the form and click **Start test**; a live
+  throughput chart and log appear below. Once finished, **Export .txt /
+  .csv / .pdf** save a report the same way the TUI does. **Save as
+  preset**/**Load preset** work the same as the TUI too.
+- **Server** — pick a port and click **Start server**; the tab shows this
+  machine's IP addresses to hand out, plus a live chart and log of incoming
+  connections.
+- **History** — a list of past client tests; select one to see details and
+  export it.
+- **Presets** — select a saved preset to load it into the Client Test tab,
+  or delete it.
 
 ## Data storage
 

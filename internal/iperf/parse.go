@@ -109,3 +109,23 @@ func ParseLine(line string) (Sample, bool) {
 
 	return s, true
 }
+
+// IsServerListeningLine reports whether line is the banner iperf3 prints
+// each time its server goes back to waiting for a connection, e.g.
+// "Server listening on 5201 (test #2)". A UI can use this (paired with
+// ParseAcceptedConnection) to show a live "listening" vs "connected" state.
+func IsServerListeningLine(line string) bool {
+	return strings.HasPrefix(line, "Server listening on")
+}
+
+var acceptedConnRe = regexp.MustCompile(`^Accepted connection from ([^,]+), port \d+`)
+
+// ParseAcceptedConnection extracts the client address from iperf3's
+// "Accepted connection from <addr>, port <port>" server-mode log line.
+func ParseAcceptedConnection(line string) (addr string, ok bool) {
+	m := acceptedConnRe.FindStringSubmatch(line)
+	if m == nil {
+		return "", false
+	}
+	return m[1], true
+}

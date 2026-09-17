@@ -115,3 +115,21 @@ func TestIsChartable(t *testing.T) {
 		t.Error("SUM sample should be chartable when parallel=4")
 	}
 }
+
+func TestServerConnectionLifecycleLines(t *testing.T) {
+	if !IsServerListeningLine("Server listening on 5201 (test #2)") {
+		t.Error("expected the server-listening banner to be recognized")
+	}
+	if IsServerListeningLine("Accepted connection from 10.0.0.5, port 54321") {
+		t.Error("accepted-connection line should not be recognized as a listening banner")
+	}
+
+	addr, ok := ParseAcceptedConnection("Accepted connection from 10.0.0.5, port 54321")
+	if !ok || addr != "10.0.0.5" {
+		t.Errorf("ParseAcceptedConnection = (%q, %v), want (\"10.0.0.5\", true)", addr, ok)
+	}
+
+	if _, ok := ParseAcceptedConnection("Server listening on 5201 (test #1)"); ok {
+		t.Error("expected listening banner to not match as an accepted connection")
+	}
+}

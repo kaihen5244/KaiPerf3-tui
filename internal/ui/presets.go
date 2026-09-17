@@ -8,10 +8,10 @@ import (
 )
 
 type presetsModel struct {
-	items      []iperf.Preset
-	cursor     int
+	items        []iperf.Preset
+	cursor       int
 	loadIntoForm bool // true when entered from the form's "Load preset" action
-	err        string
+	err          string
 }
 
 func (m *Model) gotoPresets(loadIntoForm bool) tea.Cmd {
